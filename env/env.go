@@ -1,11 +1,26 @@
 package env
 
-import "os"
+import (
+	"fmt"
+	"os"
 
-func InitEnv() {
-	os.Setenv("PORT", "8000")
+	"github.com/joho/godotenv"
+)
+
+func Init() {
+	if err := godotenv.Load(); err != nil {
+		fmt.Print("No .env file found")
+	}
 }
 
-func Get(name string) (string, bool) {
-	return os.LookupEnv(name)
+func Get(name string) string {
+	Init()
+
+	value, exists := os.LookupEnv(name)
+
+	if !exists {
+		return ""
+	}
+
+	return value
 }

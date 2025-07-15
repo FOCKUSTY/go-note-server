@@ -1,24 +1,29 @@
 package server
 
 import (
-	"fmt"
+	"main/server/note"
+	"main/server/status"
 	"net/http"
 
-	hello "main/server/hello"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type Path struct {
-	path    string
-	handler func(path string, handler func(pattern string, handler func(http.ResponseWriter, *http.Request)))
+type RouterData struct {
+	Path     string
+	Handler  func(pattern string, handler func(http.ResponseWriter, *http.Request))
+	Database *mongo.Client
 }
 
-func Router(path string, handler func(pattern string, handler func(http.ResponseWriter, *http.Request))) {
-	paths := []Path{
-		{path: path + "hello", handler: hello.Router},
-	}
+func Router(data RouterData) {
+	status.Router(status.RouterData{
+		Path:     data.Path + "/status",
+		Handler:  data.Handler,
+		Database: data.Database,
+	})
 
-	for _, path := range paths {
-		fmt.Println("Загрузка " + path.path)
-		path.handler(path.path, handler)
-	}
+	note.Router(note.RouterData{
+		Path:     data.Path + "/note",
+		Handler:  data.Handler,
+		Database: data.Database,
+	})
 }
