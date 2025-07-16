@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"main/route"
 	"net/http"
-
-	"github.com/go-chi/chi/v5"
 )
 
 type Controller struct {
@@ -25,6 +23,6 @@ func (contoller *Controller) Get() (string, http.HandlerFunc) {
 		}
 }
 
-func CreateContoller(service *Service, Router *chi.Mux, Path string) *Controller {
+func CreateContoller(service *Service, Path string) *Controller {
 	return &Controller{Routes: GetRoutes(), Service: service, Path: Path}
 }

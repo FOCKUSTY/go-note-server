@@ -41,3 +41,20 @@ func ResolvePath(route string, path ...string) ReturnResolvedPath {
 
 	return ReturnResolvedPath{RouteType, RoutePath}
 }
+
+func AddPrefixToRoute(route string, path ...string) ReturnResolvedPath {
+	r := strings.Split(route, ": ")
+
+	var RouteType = r[0]
+	var RoutePath = ""
+
+	for _, value := range path {
+		RoutePath += value
+	}
+
+	RoutePath = strings.ReplaceAll(RoutePath+r[1]+"/", "//", "/")
+
+	fmt.Println(RouteType, RoutePath)
+
+	return ReturnResolvedPath{RouteType, RoutePath}
+}

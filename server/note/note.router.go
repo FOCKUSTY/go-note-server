@@ -2,16 +2,10 @@ package note
 
 import (
 	"main/route"
-
-	"github.com/go-chi/chi/v5"
 )
 
-func Router(data *route.Route) *chi.Mux {
-	router := chi.NewRouter()
+func Router(data *route.Route) {
+	controller := CreateContoller(CreateService(data.Database), data.Path)
 
-	controller := CreateContoller(CreateService(data.Database), router, data.Path)
-
-	router.Get(controller.Get())
-
-	return router
+	data.Router.Get(controller.Get())
 }

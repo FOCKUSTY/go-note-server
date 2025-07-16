@@ -2,16 +2,18 @@ package status
 
 import (
 	"encoding/json"
+	"main/route"
 	"net/http"
 )
 
 type Controller struct {
+	Path    string
 	Routes  *Routes
 	Service *Service
 }
 
-func (contoller Controller) Get() (string, func(writer http.ResponseWriter, request *http.Request)) {
-	return contoller.Routes.GET, func(writer http.ResponseWriter, request *http.Request) {
+func (contoller Controller) Get() (string, http.HandlerFunc) {
+	return route.AddPrefixToRoute(contoller.Routes.GET, contoller.Path).RoutePath, func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json")
 
 		response := contoller.Service.Get()
@@ -20,8 +22,8 @@ func (contoller Controller) Get() (string, func(writer http.ResponseWriter, requ
 	}
 }
 
-func (contoller Controller) GetDatabase() (string, func(writer http.ResponseWriter, request *http.Request)) {
-	return contoller.Routes.GET_DATABASE, func(writer http.ResponseWriter, request *http.Request) {
+func (contoller Controller) GetDatabase() (string, http.HandlerFunc) {
+	return route.AddPrefixToRoute(contoller.Routes.GET_DATABASE, contoller.Path).RoutePath, func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json")
 
 		response := contoller.Service.GetDatabase()
@@ -30,6 +32,6 @@ func (contoller Controller) GetDatabase() (string, func(writer http.ResponseWrit
 	}
 }
 
-func CreateContoller(service *Service) *Controller {
-	return &Controller{Routes: GetRoutes(), Service: service}
+func CreateContoller(service *Service, Path string) *Controller {
+	return &Controller{Routes: GetRoutes(), Service: service, Path: Path}
 }

@@ -23,9 +23,7 @@ type NoteCreate struct {
 
 func init() {
 	client := CreateClient(env.Get("MONGO_URL"))
-	fmt.Println(client)
-	collection := client.Database.Collection("note")
-	fmt.Println(collection)
+	client.Database.CreateCollection(context.TODO(), "note")
 	fmt.Println("Collection create")
 }
 
@@ -33,8 +31,8 @@ func CreateNote(note NoteCreate) *Note {
 	createData := CreateTable()
 
 	return &Note{
-		Id:         createData.id,
-		CreatedAt:  createData.createdAt,
+		Id:         createData.Id,
+		CreatedAt:  createData.CreatedAt,
 		Title:      note.Title,
 		Body:       note.Body,
 		Attacments: []string{},

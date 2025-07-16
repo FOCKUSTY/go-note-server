@@ -7,7 +7,7 @@ type Routes struct {
 
 func GetRoutes() *Routes {
 	return &Routes{
-		GET:          "/",
-		GET_DATABASE: "/database/",
+		GET:          "GET: /",
+		GET_DATABASE: "GET: /database",
 	}
 }

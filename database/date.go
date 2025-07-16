@@ -21,13 +21,13 @@ func GenerateId() string {
 }
 
 type CreateTableData struct {
-	id        string
-	createdAt string
+	Id        string
+	CreatedAt string
 }
 
 func CreateTable() *CreateTableData {
 	return &CreateTableData{
-		id:        GenerateId(),
-		createdAt: time.Now().Format(time.RFC3339),
+		Id:        GenerateId(),
+		CreatedAt: time.Now().Format(time.RFC3339),
 	}
 }
