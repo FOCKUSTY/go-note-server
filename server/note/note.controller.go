@@ -2,24 +2,29 @@ package note
 
 import (
 	"encoding/json"
+	"main/route"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type Controller struct {
+	Path    string
 	Routes  *Routes
 	Service *Service
 }
 
-func (contoller Controller) Get() (string, func(writer http.ResponseWriter, request *http.Request)) {
-	return contoller.Routes.GET, func(writer http.ResponseWriter, request *http.Request) {
-		writer.Header().Set("Content-Type", "application/json")
+func (contoller *Controller) Get() (string, http.HandlerFunc) {
+	return route.ResolvePath(contoller.Routes.GET, contoller.Path).RoutePath,
+		func(writer http.ResponseWriter, request *http.Request) {
+			writer.Header().Set("Content-Type", "application/json")
 
-		response := contoller.Service.Get()
+			response := contoller.Service.Get()
 
-		json.NewEncoder(writer).Encode(response)
-	}
+			json.NewEncoder(writer).Encode(response)
+		}
 }
 
-func CreateContoller(service *Service) *Controller {
-	return &Controller{Routes: GetRoutes(), Service: service}
+func CreateContoller(service *Service, Router *chi.Mux, Path string) *Controller {
+	return &Controller{Routes: GetRoutes(), Service: service, Path: Path}
 }

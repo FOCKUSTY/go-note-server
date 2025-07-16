@@ -1,22 +1,17 @@
 package note
 
 import (
-	"fmt"
-	"net/http"
+	"main/route"
 
-	"go.mongodb.org/mongo-driver/mongo"
+	"github.com/go-chi/chi/v5"
 )
 
-type RouterData struct {
-	Path     string
-	Handler  func(pattern string, handler func(http.ResponseWriter, *http.Request))
-	Database *mongo.Client
-}
+func Router(data *route.Route) *chi.Mux {
+	router := chi.NewRouter()
 
-func Router(data RouterData) {
-	controller := CreateContoller(CreateService(data.Database))
+	controller := CreateContoller(CreateService(data.Database), router, data.Path)
 
-	getPath, getHandler := controller.Get()
-	fmt.Println("Загрузка " + data.Path + getPath)
-	data.Handler(data.Path+getPath, getHandler)
+	router.Get(controller.Get())
+
+	return router
 }

@@ -12,7 +12,7 @@ type Service struct {
 	Database *mongo.Client
 }
 
-func (service Service) Get() string {
+func (service *Service) Get() string {
 	err := service.Database.Database("note").CreateCollection(context.Background(), "note")
 
 	if err != nil {

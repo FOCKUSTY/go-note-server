@@ -6,6 +6,6 @@ type Routes struct {
 
 func GetRoutes() *Routes {
 	return &Routes{
-		GET: "/",
+		GET: "GET: /",
 	}
 }

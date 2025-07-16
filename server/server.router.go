@@ -1,29 +1,20 @@
 package server
 
 import (
+	"main/route"
 	"main/server/note"
-	"main/server/status"
-	"net/http"
 
-	"go.mongodb.org/mongo-driver/mongo"
+	"github.com/go-chi/chi/v5"
 )
 
-type RouterData struct {
-	Path     string
-	Handler  func(pattern string, handler func(http.ResponseWriter, *http.Request))
-	Database *mongo.Client
-}
+func Router(data *route.Route) *chi.Mux {
+	router := chi.NewRouter()
 
-func Router(data RouterData) {
-	status.Router(status.RouterData{
-		Path:     data.Path + "/status",
-		Handler:  data.Handler,
+	router.Mount(data.Path, note.Router(&route.Route{
+		Path:     data.Path + "note",
 		Database: data.Database,
-	})
+		Router:   router,
+	}))
 
-	note.Router(note.RouterData{
-		Path:     data.Path + "/note",
-		Handler:  data.Handler,
-		Database: data.Database,
-	})
+	return router
 }
